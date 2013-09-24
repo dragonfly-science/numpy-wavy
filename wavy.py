@@ -33,8 +33,11 @@ def get_audio(in_file, offset=0, duration=0):
 def slice_wave(in_file, out_file, offset=0, duration=0):
     """Write a section of a wavefile to a new file"""
     wav = wave.open(out_file, 'wb')
-    frames, params = _get_frames(in_file, offset, duration)
-    wav.setparams(params)
-    wav.writeframes(frames)
-    wav.close()
+    try:
+        frames, params = _get_frames(in_file, offset, duration)
+        wav.setparams(params)
+        wav.writeframes(frames)
+    finally:
+        wav.close()
+
 
