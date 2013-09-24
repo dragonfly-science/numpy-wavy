@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.org/dragonfly-science/numpy-wavy.png)
+
 numpy-wavy
 ==========
 
@@ -28,7 +30,6 @@ This was developed for a specific project, and is put here in
 case other people find it useful. It hasn't been tested on a wide variety
 of files. If you find that it doesn't work as expected, carry
 out the usual pull request business.
-
 
 Licence
 =======
