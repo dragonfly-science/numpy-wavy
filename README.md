@@ -3,7 +3,7 @@ numpy-wavy
 
 A python module for importing wave (`*.wav`) files into numpy. 
 
-Contains a single module `wavy` containing the functions `get_frames`, `get_audio`, and `slice_wave`.
+Contains a single module `wavy` providing the functions `get_audio` and `slice_wave`.
 
 To read in a wavefile:
 
