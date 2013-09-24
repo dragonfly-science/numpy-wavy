@@ -1,29 +1,33 @@
 numpy-wavy
 ==========
 
-A python module for importing wave (*.wav) files into numpy. 
+A python module for importing wave (`*.wav`) files into numpy. 
 
-Contains a single module `wavy` containing the functions `get_frames`
-and `get_audio`.
+Contains a single module `wavy` containing the functions `get_frames`, `get_audio`, and `slice_wave`.
 
 To read in a wavefile:
 
 ```py
 from wavy import get_audio
-audio = get_audio('soundfile.wav')
+audio = get_audio(open('soundfile.wav'))
 ```
 
 To read in the third second of the file:
 ```py
 from wavy import get_audio
-audio = get_audio('soundfile.wav', offset=2, duration=1)
+audio = get_audio(open('soundfile.wav'), offset=2, duration=1)
+```
+
+To save the third second of the file to a new file:
+```py
+from wavy import slice_wave
+slice_wav(open('soundfile.wav'), 'second.wav', offset=2, duration=1)
 ```
 
 This was developed for a specific project, and is put here in
 case other people find it useful. It hasn't been tested on a wide variety
 of files. If you find that it doesn't work as expected, carry
 out the usual pull request business.
-
 
 
 Licence
