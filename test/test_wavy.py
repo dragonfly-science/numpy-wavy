@@ -17,7 +17,7 @@ class TestThreeSeconds(unittest.TestCase):
     def test_array(self):
         self.assertEqual(type(self.audio), np.ndarray)
 
-class TestOffest(unittest.TestCase):
+class TestOffset(unittest.TestCase):
     def setUp(self):
         self.audio, self.framerate = get_audio('test/three-second.wav')
     
