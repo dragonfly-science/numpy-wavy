@@ -10,20 +10,25 @@ To read in a wavefile:
 
 ```py
 from wavy import get_audio
-audio = get_audio('soundfile.wav')
+audio = get_audio(open('soundfile.wav'))
 ```
 
 To read in the third second of the file:
 ```py
 from wavy import get_audio
-audio = get_audio('soundfile.wav', offset=2, duration=1)
+audio = get_audio(open('soundfile.wav'), offset=2, duration=1)
+```
+
+To save the third second of the file to a new file:
+```py
+from wavy import write_wav_slice
+write_wav_slice(open('soundfile.wav'), 'second.wav', offset=2, duration=1)
 ```
 
 This was developed for a specific project, and is put here in
 case other people find it useful. It hasn't been tested on a wide variety
 of files. If you find that it doesn't work as expected, carry
 out the usual pull request business.
-
 
 
 Licence
