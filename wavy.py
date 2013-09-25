@@ -38,6 +38,9 @@ def slice_wave(in_file, out_file, offset=0, duration=0):
         wav.setparams(params)
         wav.writeframes(frames)
     finally:
-        wav.close()
+        try:
+            wav.close()
+        except:
+            pass
 
 
