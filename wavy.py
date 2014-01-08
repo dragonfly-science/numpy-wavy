@@ -1,8 +1,10 @@
 "Functions for reading wave files into numpy"""
 import wave
-import numpy as np
 import struct
+import math
 from contextlib import closing
+
+import numpy as np
 
 _formats = {1: "<%dB", 2:"<%dh", 4:"<%dl"}
 _zeroline = {1: 128, 2: 0 , 4: 0}
@@ -19,7 +21,7 @@ def _get_frames(in_file, offset=0, duration=0):
             duration = nframes/float(framerate*nchannels) - offset
         return wav.readframes(int(duration*framerate*nchannels)), params
 
-def get_audio(in_file, offset=0, duration=0):
+def get_audio(in_file, offset=0, duration=0, max_framerate=None):
     """Return the audio from a wavefile as an array"""
     frames, params = _get_frames(in_file=in_file, offset=offset, duration=duration)
     nchannels = params[0]
@@ -29,6 +31,11 @@ def get_audio(in_file, offset=0, duration=0):
         _zeroline[sampwidth]
     if nchannels > 1:
         audio.reshape((-1, nchannels))
+    if max_framerate:
+        subsampling = int(math.ceil(framerate/float(max_framerate)))
+        if subsampling  > 1:
+            audio = audio[::int(subsampling),]
+            framerate = framerate/float(subsampling)
     return audio, framerate
 
 def slice_wave(in_file, out_file, offset=0, duration=0):

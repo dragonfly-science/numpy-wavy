@@ -17,6 +17,32 @@ class TestThreeSeconds(unittest.TestCase):
     def test_array(self):
         self.assertEqual(type(self.audio), np.ndarray)
 
+class TestFramerate(unittest.TestCase):
+    def test_halfsampling(self):
+        audio, framerate = get_audio('test/three-second.wav', max_framerate=4000)
+        self.assertEqual(len(audio), 12000)
+        self.assertEqual(framerate, 4000)
+    
+    def test_subsampling(self):
+        audio, framerate = get_audio('test/three-second.wav', max_framerate=6000)
+        self.assertEqual(len(audio), 12000)
+        self.assertEqual(framerate, 4000)
+    
+    def test_third_sampling(self):
+        audio, framerate = get_audio('test/three-second.wav', max_framerate=3000)
+        self.assertEqual(len(audio), 8000)
+        self.assertEqual(framerate, 8000/3.0)
+    
+    def test_no_upsampling(self):
+        audio, framerate = get_audio('test/three-second.wav', max_framerate=10000)
+        self.assertEqual(len(audio), 24000)
+        self.assertEqual(framerate, 8000)
+    
+    def test_keep_framerate(self):
+        audio, framerate = get_audio('test/three-second.wav', max_framerate=8000)
+        self.assertEqual(len(audio), 24000)
+        self.assertEqual(framerate, 8000)
+
 class TestOffset(unittest.TestCase):
     def setUp(self):
         self.audio, self.framerate = get_audio('test/three-second.wav')
