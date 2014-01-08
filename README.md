@@ -25,6 +25,16 @@ To save the third second of the file to a new file:
 from wavy import slice_wave
 slice_wav('soundfile.wav', 'second.wav', offset=2, duration=1)
 ```
+To down sample an audio file, specify the `max_framerate` argument in either
+`get_audio` or `slice_wave`. The audio will be
+subsampled so that  the resulting framerate is less than or equal to `max_framerate`.
+For example, to ensure that the framerate is less than or equal to 4k:
+```py
+from wavy import slice_wave
+slice_wav('soundfile.wav', 'subsampled.wav', max_framerate=4000)
+```
+
+
 
 This was developed for a specific project, and is put here in
 case other people find it useful. It hasn't been tested on a wide variety
