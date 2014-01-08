@@ -1,6 +1,7 @@
 import os
 import unittest
 import numpy as np
+from cStringIO import StringIO
 
 from wavy import get_audio, slice_wave
 
@@ -64,17 +65,32 @@ class TestOffset(unittest.TestCase):
 
 class TestSlice(unittest.TestCase):
     def setUp(self):
-        slice_wave('test/three-second.wav', 'test/one-second.wav', offset=1, duration=1)
+        self.one_second = StringIO()
+        slice_wave('test/three-second.wav', self.one_second, offset=1, duration=1)
+        self.low_framerate = StringIO()
+        slice_wave('test/three-second.wav', self.low_framerate, max_framerate=4000)
     
     def test_slice_length(self):
-        audio1, framerate1 = get_audio('test/one-second.wav')
+        self.one_second.seek(0)
+        audio1, framerate1 = get_audio(self.one_second)
         self.assertEqual(len(audio1), 8000)
         self.assertEqual(framerate1, 8000)
 
     def test_slice(self):
+        self.one_second.seek(0)
         audio3, framerate3 = get_audio('test/three-second.wav')
-        audio1, framerate1 = get_audio('test/one-second.wav')
+        audio1, framerate1 = get_audio(self.one_second)
         self.assertEqual(audio3[8000], audio1[0])
 
-    def tearDown(self):
-        os.remove('test/one-second.wav')
+    def test_low_framerate(self):
+        self.low_framerate.seek(0)
+        audio, framerate = get_audio(self.low_framerate)
+        self.assertEqual(len(audio), 12000)
+        self.assertEqual(framerate, 4000)
+    
+    def test_subsampling(self):
+        self.low_framerate.seek(0)
+        audio, framerate = get_audio(self.low_framerate)
+        audio3, framerate3 = get_audio('test/three-second.wav')
+        self.assertEqual(audio[2000], audio3[4000])
+

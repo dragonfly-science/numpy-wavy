@@ -38,11 +38,24 @@ def get_audio(in_file, offset=0, duration=0, max_framerate=None):
             framerate = framerate/float(subsampling)
     return audio, framerate
 
-def slice_wave(in_file, out_file, offset=0, duration=0):
+def slice_wave(in_file, out_file, offset=0, duration=0, max_framerate=None):
     """Write a section of a wavefile to a new file"""
+    with closing(wave.open(in_file)) as win:
+        params = win.getparams()
     wav = wave.open(out_file, 'wb')
     try:
-        frames, params = _get_frames(in_file, offset, duration)
+        if not max_framerate:
+            frames, params = _get_frames(in_file, offset, duration)
+        else:
+            audio, framerate = get_audio(in_file, offset=offset, duration=duration, max_framerate=max_framerate)
+            params = list(params)
+            if len(audio.shape) == 1:
+                params[0] = 1
+            else:
+                params[0] = audio.shape[1]
+            params[2] = framerate
+            audio = audio.flatten() + _zeroline[params[1]]
+            frames = struct.pack(_formats[params[1]] % (len(audio),), *audio)
         wav.setparams(params)
         wav.writeframes(frames)
     finally:
@@ -50,5 +63,7 @@ def slice_wave(in_file, out_file, offset=0, duration=0):
             wav.close()
         except:
             pass
+
+
 
 
